@@ -1,3 +1,4 @@
+from .cli import Cli
 try:
     import ConfigParser
 except:
@@ -6,6 +7,8 @@ except:
 
 class ConfigReader:
     def __init__(self, abs_path_to_file):
+        self.cli = Cli()
+        self.cli.f_info('Reading config: %s' % abs_path_to_file)
         self.settings = ConfigParser.SafeConfigParser(self.get_defaults())
         self.settings.read(abs_path_to_file)
         self.sections = self.settings.sections()

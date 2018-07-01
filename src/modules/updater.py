@@ -19,10 +19,11 @@ class Updater:
             self.__run_for_multiple_configs(configs_directory)
 
     def __run_for_single_config(self, the_file):
-        self.__run_updater(read_config.ConfigReader(the_file))
+        self.__run_updater(read_config.ConfigReader(os.path.abspath(the_file)))
 
     def __run_for_multiple_configs(self, directory):
         configs_files = listdir(directory)
+        directory = os.path.abspath(directory)
         for the_file in configs_files:
             abs_path = os.path.join(directory, the_file)
             self.__run_updater(read_config.ConfigReader(abs_path))
