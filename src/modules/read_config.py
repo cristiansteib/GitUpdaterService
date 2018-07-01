@@ -5,9 +5,9 @@ except:
 
 
 class ConfigReader:
-    def __init__(self, the_file):
+    def __init__(self, abs_path_to_file):
         self.settings = ConfigParser.SafeConfigParser(self.get_defaults())
-        self.settings.read(the_file)
+        self.settings.read(abs_path_to_file)
         self.sections = self.settings.sections()
         self.current_section = self.sections[0]  # casi hardcoded section. FIXME
 

@@ -22,5 +22,5 @@ post_update=echo "update done" >> ~/file.file
 
 How to run:
 ----------------------------------------------------------------------
-python run_updater.py --ini config.ini
-
+python run_updater.py --ini config.ini  
+python run_updater.py -c /path/to/config/folder

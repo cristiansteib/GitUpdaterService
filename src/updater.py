@@ -24,7 +24,8 @@ class Updater:
     def __run_for_multiple_configs(self, directory):
         configs_files = listdir(directory)
         for the_file in configs_files:
-            self.__run_updater(read_config.ConfigReader(the_file))
+            abs_path = os.path.join(directory, the_file)
+            self.__run_updater(read_config.ConfigReader(abs_path))
 
     def run_command(self,command):
         """ run and wait to finish"""
@@ -48,8 +49,3 @@ class Updater:
             self.run_command(config.get_hook_post())
         else:
             self.cli.f_info('Branch {0} Up-to-date, for project {1}'.format(branch, config.get_project_name()))
-
-
-
-
-u = Updater(the_file='project_configs/unAventon.conf')
