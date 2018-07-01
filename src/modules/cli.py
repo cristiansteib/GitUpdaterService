@@ -7,15 +7,18 @@ class Cli:
         self.verbose = verbose
         self.full_verbose = full_verbose
 
+    def __show(self):
+        return self.verbose or self.full_verbose
+
     def log(self, msg):
-        if self.verbose:
+        if self.__show():
             print(msg)
 
     def warning(self):
         pass
 
     def info(self, msg):
-        if self.verbose:
+        if self.__show():
             print(msg)
 
     def f_info(self, msg):

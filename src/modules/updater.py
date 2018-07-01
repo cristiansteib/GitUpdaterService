@@ -1,4 +1,4 @@
-from modules import read_config, cli, git
+from . import read_config, cli, git
 from os import listdir
 import subprocess
 import os
@@ -38,7 +38,6 @@ class Updater:
     def __run_updater(self, config):
 
         branch = config.get_branch()
-
         gitt = git.Git(config.get_path())
 
         if gitt.is_updated_need_in_current_branch():
