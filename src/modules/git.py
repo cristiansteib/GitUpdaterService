@@ -13,6 +13,9 @@ class Git(runCommand):
     def __init__(self, path):
         os.chdir(path)
 
+    def current_branch(self):
+        return 'master'
+
     def branch(self, name):
         return self.execute('git', 'branch', name)
 
@@ -30,3 +33,10 @@ class Git(runCommand):
 
     def pull(self, origin='master'):
         return self.execute('git', 'pull', 'origin', origin)
+
+    def remote_update(self):
+        return self.execute('git', 'remote', 'update')
+
+    def is_updated_need_in_current_branch(self,):
+        ex = self.execute('git', 'rev-list', 'HEAD..origin/' + self.current_branch(), '--count')
+        return int(ex.stdout.decode().strip()) > 0

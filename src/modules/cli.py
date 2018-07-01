@@ -1,4 +1,5 @@
-from src.decorators.singleton import SingletonDecorator
+from decorators.singleton import SingletonDecorator
+
 
 @SingletonDecorator
 class Cli:
@@ -8,3 +9,14 @@ class Cli:
     def log(self, msg):
         if self.verbose:
             print(msg)
+
+    def warning(self):
+        pass
+
+    def info(self,msg):
+        if self.verbose:
+            print(msg)
+
+    def error(self, msg):
+        print(msg)
+
