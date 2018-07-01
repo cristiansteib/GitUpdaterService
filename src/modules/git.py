@@ -5,9 +5,13 @@ class runCommand:
 
     @staticmethod
     def execute(*command):
-        command = list(command)
-        return subprocess.run(command, stdout=subprocess.PIPE)
+        """ return the stored the output"""
+        return subprocess.check_output(list(command))
 
+    @staticmethod
+    def os_run(command):
+        retcode = os.system(command)
+        return retcode
 
 class Git(runCommand):
     def __init__(self, path):
@@ -32,11 +36,12 @@ class Git(runCommand):
         return self.execute('git', 'reset', '--hard', 'origin/' + branch)
 
     def pull(self, origin='master'):
-        return self.execute('git', 'pull', 'origin', origin)
+        return self.execute('git','pull', 'origin', origin, '-q')
 
     def remote_update(self):
         return self.execute('git', 'remote', 'update')
 
     def is_updated_need_in_current_branch(self,):
+        self.remote_update()
         ex = self.execute('git', 'rev-list', 'HEAD..origin/' + self.current_branch(), '--count')
-        return int(ex.stdout.decode().strip()) > 0
+        return int(ex.decode().strip()) > 0

@@ -8,11 +8,11 @@ class Updater:
     def __init__(self,
                  the_file=None,
                  configs_directory=None,
-                 verbose=True
+                 verbose=True,
+                 full_verbose=True
                  ):
 
-        self.cli = cli.Cli(True)
-
+        self.cli = cli.Cli(verbose=verbose, full_verbose=full_verbose)
         if the_file:
             self.__run_for_single_config(the_file)
         elif configs_directory:
@@ -26,26 +26,28 @@ class Updater:
         for the_file in configs_files:
             self.__run_updater(read_config.ConfigReader(the_file))
 
-    @staticmethod
-    def run_command(command):
+    def run_command(self,command):
         """ run and wait to finish"""
         if command and len(command) > 0:
+            self.cli.info('About to run: %s' % command)
             process = subprocess.Popen(command, shell=True)
             os.waitpid(process.pid, 0)
 
+
     def __run_updater(self, config):
-        self.run_command(config.get_hook_pre())
 
         branch = config.get_branch()
 
         gitt = git.Git(config.get_path())
-        ex = gitt.remote_update()
 
         if gitt.is_updated_need_in_current_branch():
             # do the update
-            self.cli.info("Updating branch %s" % branch)
-            ex = gitt.pull(branch)
+            self.run_command(config.get_hook_pre())
+            self.cli.info('Updating branch {0} for project: {1}'.format(branch, config.get_project_name()))
+            gitt.pull(branch)
             self.run_command(config.get_hook_post())
+        else:
+            self.cli.f_info('Branch {0} Up-to-date, for project {1}'.format(branch, config.get_project_name()))
 
 
 
