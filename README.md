@@ -20,10 +20,12 @@ parameters:
 
 The configs files 
 -------------------------------------------------------------------
-[ProjectName] : Set the project name, **Mandatory**   
-path : Set the path where is located the with project **Mandatory**  
-branch : Set the branch to update **Mandatory**  
- 
+[ProjectName] : Set the project name. **Mandatory**   
+path : Set the path where is located the with project. **Mandatory**  
+branch : Set the branch to update. **Mandatory**  
+pre_update: A command to run before update, if update was needed.  
+post_update: A command to run after update.   
+
  Config example
 --------------------------------------------------------------------
 
