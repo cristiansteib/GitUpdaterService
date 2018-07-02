@@ -17,13 +17,11 @@ class runCommand:
 
 def save_and_restore_dir(func):
     """ decorator just for changhe old directory and restore"""
-
     def func_wrapper(self):
         old_dir = os.getcwd()
         os.chdir(self.path)
         func(self)
         os.chdir(old_dir)
-
     return func_wrapper
 
 
