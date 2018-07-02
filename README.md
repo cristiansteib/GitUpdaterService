@@ -5,7 +5,7 @@ seleccionando un branch.
 
 How to run:
 ----------------------------------------------------------------------
-python run_updater.py -i config.ini  
+python run_updater.py -i config.ini  -d  
 python run_updater.py -c /path/to/config/folder
 
 parameters:
@@ -17,7 +17,7 @@ parameters:
 | specify the folder of configs | -d      | --config-directory|  /path/to/config/folder/ |
 | show what is going on| -v | --verbose| No|
 | show very detailed what is going on| -vf | --verbose-full |No | 
-
+| Daemonize | -d | --daemonize |No | 
 The configs files 
 -------------------------------------------------------------------
 [ProjectName] : Set the project name. **Mandatory**   

@@ -11,6 +11,7 @@ class ConfigReader:
         self.cli.f_info('Reading config: %s' % abs_path_to_file)
         self.settings = ConfigParser.SafeConfigParser(self.get_defaults())
         self.settings.read(abs_path_to_file)
+        self.settings.read(abs_path_to_file)
         self.sections = self.settings.sections()
         self.current_section = self.sections[0]  # casi hardcoded section. FIXME
 
