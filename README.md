@@ -17,7 +17,8 @@ parameters:
 | specify the folder of configs | -d      | --config-directory|  /path/to/config/folder/ |
 | show what is going on| -v | --verbose| No|
 | show very detailed what is going on| -vf | --verbose-full |No | 
-| Daemonize | -d | --daemonize |No | 
+| Daemonize | -d | --daemonize |No |   
+
 The configs files 
 -------------------------------------------------------------------
 [ProjectName] : Set the project name. **Mandatory**   
