@@ -54,7 +54,7 @@ class Git(runCommand):
 
     @save_and_restore_dir
     def pull(self, origin='master'):
-        return self.execute('git', 'pull', 'origin', origin, '-q')
+        return self.execute('git', 'pull', '--no-pager', 'origin', origin, '-q')
 
     @save_and_restore_dir
     def remote_update(self):
