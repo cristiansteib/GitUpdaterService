@@ -1,8 +1,7 @@
-ln -s /lib/systemd/git_updater.service /etc/systemd/system/git_updater.service
-systemctl git_updater.service
-systemctl git_updater.service
+ln -s system/git_updater.service /etc/systemd/system/git_updater.service
+systemctl enable git_updater.service
 
-------------------------------------------------------------
+            ------------------------------------------------------------
 para el .service
 SyslogIdentifier=<your program identifier> # without any quote
 
