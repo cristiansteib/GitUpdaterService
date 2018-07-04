@@ -1,0 +1,15 @@
+[Unit]
+Description=Git remote updater
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /opt/gitUpdater/run_updater.py -c /etc/git-updater/
+WorkingDirectory=/opt/gitUpdater/
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=<Git updater>
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=sysinit.target
