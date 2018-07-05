@@ -39,13 +39,17 @@ class Updater:
     def __run_updater(self, config):
 
         branch = config.get_branch()
-        gitt = git.Git(config.get_path())
+        git_instance = git.Git(config.get_path())
 
-        if gitt.is_updated_need_in_current_branch():
-            # do the update
+        if git_instance.current_branch() != branch:
+            git_instance.reset_hard()
+            git_instance.checkout(branch)
+
+        if git_instance.current_branch_need_pull():
+            # do the update in the repo folder
             self.run_command(config.get_hook_pre())
             self.cli.info('Updating branch {0} for project: {1}'.format(branch, config.get_project_name()))
-            gitt.pull(branch)
+            git_instance.pull(branch)
             self.run_command(config.get_hook_post())
         else:
             self.cli.f_info('Branch {0} Up-to-date, for project {1}'.format(branch, config.get_project_name()))
