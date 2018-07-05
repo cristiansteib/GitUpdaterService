@@ -3,6 +3,8 @@ Description=Git remote updater
 
 [Service]
 Type=simple
+User=root
+Group=root
 ExecStart=/usr/bin/python3 /path/to/run_updater.py -c /etc/updater-git/
 WorkingDirectory=/path/to/
 StandardOutput=syslog

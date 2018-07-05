@@ -42,13 +42,13 @@ class Updater:
         git_instance = git.Git(config.get_path())
 
         if git_instance.current_branch() != branch:
-            git_instance.reset_hard()
             git_instance.checkout(branch)
 
         if git_instance.current_branch_need_pull():
             # do the update in the repo folder
             self.run_command(config.get_hook_pre())
             self.cli.info('Updating branch {0} for project: {1}'.format(branch, config.get_project_name()))
+            git_instance.reset_hard()
             git_instance.pull(branch)
             self.run_command(config.get_hook_post())
         else:
