@@ -19,7 +19,10 @@ class Git(runCommand):
         self.path = path
 
     def current_branch(self):
-        return 'master' #TODO
+        # todo: make it re expression
+        out = self.execute('git', 'branch').decode()
+        branch = list(filter(lambda x: x.startswith('* '), out.split('\n')))[0][2:]
+        return branch
 
     def branch(self, name):
         return self.execute('git', 'branch', name)
@@ -31,18 +34,30 @@ class Git(runCommand):
         return self.execute('git', 'update')
 
     def fetch(self):
-        return self.execute('git', 'fetch')
+        return self.execute('git', 'fetch', '-q')
 
-    def resetHard(self, branch):
-        return self.execute('git', 'reset', '--hard', 'origin/' + branch)
+    def fetch_branch(self, branch):
+        if self.current_branch() != branch:
+            branch = branch + ':' + branch
+        return self.execute('git', 'fetch', 'origin', branch, '-q')
+
+    def reset_hard(self):
+        return self.execute('git', 'reset', '--hard')
 
     def pull(self, origin='master'):
-        return self.execute('git', 'pull', '--no-edit', 'origin', origin, '-q')
+        return self.execute('git', 'pull', '--no-edit', 'origin', origin, '--quiet')
+
+    def diff_local_vs_remote(self, branch):
+        return self.execute('git', 'diff', '--name-only', branch, 'origin/' + branch)
 
     def remote_update(self):
         return self.execute('git', 'remote', 'update')
 
-    def is_updated_need_in_current_branch(self, ):
-        self.remote_update()
-        ex = self.execute('git', 'rev-list', 'HEAD..origin/' + self.current_branch(), '--count')
-        return int(ex.decode().strip()) > 0
+    def current_branch_need_pull(self):
+        self.fetch_branch(self.current_branch())
+        local = self.execute('git', 'rev-parse', '@')
+        remote = self.execute('git', 'rev-parse', '@{u}')
+        base = self.execute('git', 'merge-base', '@', '@{u}')
+        if local == remote:
+            return False
+        return local == base
