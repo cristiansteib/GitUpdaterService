@@ -1,4 +1,19 @@
+"""
+
+This module is only used to read the config of one file, for a project.
+
+A config file example:
+
+        [ProjectName]
+        path=/absolute/path/to/project
+        branch=master
+        pre_update=echo "Hello World" > ~/file.file
+        post_update=echo "update done" >> ~/file.file
+
+"""
+
 from .cli import Cli
+
 try:
     import ConfigParser
 except:

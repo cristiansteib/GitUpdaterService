@@ -1,4 +1,4 @@
-from . import read_config, cli, git
+from . import read_project_config, cli, git
 from os import listdir
 import subprocess
 import os
@@ -19,7 +19,7 @@ class Updater:
             self.__run_for_multiple_configs(configs_directory)
 
     def __run_for_single_config(self, the_file):
-        self.__run_updater(read_config.ConfigReader(os.path.abspath(the_file)))
+        self.__run_updater(read_project_config.ConfigReader(os.path.abspath(the_file)))
 
     def __run_for_multiple_configs(self, directory):
         configs_files = listdir(directory)
