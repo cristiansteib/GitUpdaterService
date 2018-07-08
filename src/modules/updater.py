@@ -53,3 +53,6 @@ class Updater:
             self.run_command(config.get_hook_post())
         else:
             self.cli.f_info('Branch {0} Up-to-date, for project {1}'.format(branch, config.get_project_name()))
+
+    def update(self):
+        pass
