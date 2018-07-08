@@ -24,10 +24,16 @@ class ConfigReader:
     def __init__(self, abs_path_to_file):
         self.cli = Cli()
         self.cli.f_info('Reading config: %s' % abs_path_to_file)
-        self.settings = ConfigParser.SafeConfigParser(self.get_defaults())
+        self.settings = ConfigParser.ConfigParser(defaults=self.get_defaults())
         self.settings.read(abs_path_to_file)
         self.sections = self.settings.sections()
         self.current_section = self.sections[0]  # casi hardcoded section. FIXME
+
+    def get_project_name(self):
+        return self.current_section
+
+    def is_webhook(self):
+        return False
 
     @staticmethod
     def get_defaults():

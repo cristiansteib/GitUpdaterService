@@ -1,7 +1,8 @@
 from modules.updater import Updater
 from modules.arguments import parse_args
 from time import sleep
-from modules.web_server import WebServer
+from modules import web_server
+from modules.config_reader import ConfigReader
 import sys
 import threading
 
@@ -27,21 +28,28 @@ class TheUpdater:
 
 
 class WebThread (threading.Thread):
-    def __init__(self):
+    def __init__(self, *args, **kgargs):
         threading.Thread.__init__(self)
+        self.args = args
+        self.kwargs = kgargs
 
     def run(self):
-        WebServer()
+        web_server.run(*self.args, **self.kwargs)
 
 
 if __name__ == "__main__":
-    thread_web = WebThread()
+    config = ConfigReader()
+    web_thread = WebThread(
+        port=config.web_port
+    )
+
+    if config.active_web:
+        web_thread.start()
 
     if len(sys.argv) == 1:
-        # use the config files
+        # no parameter was send, so use the config files
         pass
     else:
-        thread_web.start()
+        web_thread.start()
         updater = TheUpdater(parse_args())
-        print('run updater')
         updater.run()

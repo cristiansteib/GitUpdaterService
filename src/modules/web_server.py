@@ -1,41 +1,34 @@
-# -*- coding: utf-8 -*-
-"""
-    server.py
-    ~~~~~~ on December 07,2018 23:47
-
-    This is a web service.
-
-"""
-
-
 from flask import Flask
 import logging
+from modules.config_reader import ConfigReader
+from modules.updater import Updater
 
+app = Flask(
+    'WebGitUpdaterService',
+)
 
+updater = None
 # log
-"""
 logging.basicConfig(
-    filename=CONFIG.LOG_FILE_PATH,
+    filename='log.log',
     level=logging.DEBUG,
     format='%(asctime)s - %(levelname)s - %(message)s'
 )
-"""
 
 
-class WebServer:
-
-    def __init__(self, path_to_git_project_configs=None, host='0.0.0.0', port=8080, endpoint='/'):
-        self.port = 8080
-        self.host = '0.0.0.0'
-        endpoint = '/'
-        flask = Flask('web_server_git_updater')
+@app.route('/')
+def index():
+    updater.run_if_project_exists('unAventon')
+    return 'Hello world'
 
 
-        def run():
-            flask.run(debug=False, host=self.host, port=self.port)
+def run(*args, **kwargs):
+    config_instance = ConfigReader()
+    global updater
+    updater = Updater(
+        configs_directory=config_instance.configs_directory(),
+    )
+    app.run(*args, debug=False, host=config_instance.web_host(), port=config_instance.web_port(), **kwargs)
 
-        @flask.route(endpoint)
-        def listener():
-            return "Hello world"
-
-        run()
+if __name__ == '__main__':
+    run()

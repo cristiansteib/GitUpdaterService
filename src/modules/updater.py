@@ -1,7 +1,8 @@
-from . import read_project_config, cli, git
+from modules import read_project_config, cli, git
 from os import listdir
 import subprocess
 import os
+import logging
 
 
 class Updater:
@@ -13,20 +14,33 @@ class Updater:
                  ):
 
         self.cli = cli.Cli(verbose=verbose, full_verbose=full_verbose)
-        if the_file:
-            self.__run_for_single_config(the_file)
-        elif configs_directory:
-            self.__run_for_multiple_configs(configs_directory)
+        self.path_to_file_to_read = the_file
+        self.path_to_multiple_files = configs_directory
+
+    def run(self):
+        if self.path_to_file_to_read:
+            self.__run_for_single_config(self.path_to_file_to_read)
+        elif self.path_to_multiple_files:
+            self.__run_for_multiple_configs(self.path_to_multiple_files)
+
+    def run_if_project_exists(self, project):
+        if self.path_to_multiple_files:
+            self.__run_for_multiple_configs(self.path_to_multiple_files, project)
+        else:
+            logging.warning("The directory for the configs files was not set")
 
     def __run_for_single_config(self, the_file):
         self.__run_updater(read_project_config.ConfigReader(os.path.abspath(the_file)))
 
-    def __run_for_multiple_configs(self, directory):
+    def __run_for_multiple_configs(self, directory, only_this_project=None):
         configs_files = listdir(directory)
         directory = os.path.abspath(directory)
         for the_file in configs_files:
             abs_path = os.path.join(directory, the_file)
-            self.__run_updater(read_config.ConfigReader(abs_path))
+            config_of_project = read_project_config.ConfigReader(abs_path)
+            if (only_this_project and only_this_project == config_of_project.get_project_name()) ^ (not config_of_project.is_webhook):
+                self.__run_updater(config_of_project)
+
 
     def run_command(self,command):
         """ run and wait to finish"""
@@ -35,9 +49,7 @@ class Updater:
             process = subprocess.Popen(command, shell=True)
             os.waitpid(process.pid, 0)
 
-
     def __run_updater(self, config):
-
         branch = config.get_branch()
         git_instance = git.Git(config.get_path())
 
@@ -53,6 +65,3 @@ class Updater:
             self.run_command(config.get_hook_post())
         else:
             self.cli.f_info('Branch {0} Up-to-date, for project {1}'.format(branch, config.get_project_name()))
-
-    def update(self):
-        pass

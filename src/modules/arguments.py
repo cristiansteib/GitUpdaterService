@@ -33,20 +33,4 @@ def parse_args():
         action="store_true",
         help="Show full detail on what is going on"
     )
-
-    parser.add_argument(
-        "-d",
-        "--daemonize",
-        action="store_true",
-        help="Daemonize the updater"
-    )
-
-    parser.add_argument(
-        "-web",
-        "--web-server",
-        action="store_true",
-        help="Activate the web service"
-    )
-
-    parser.parse_args()
     return parser.parse_args()
