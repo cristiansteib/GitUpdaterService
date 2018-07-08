@@ -1,6 +1,7 @@
 from modules.updater import Updater
-from arguments import parse_args
+from modules.arguments import parse_args
 from time import sleep
+import sys
 
 
 class TheUpdater:
@@ -21,11 +22,13 @@ class TheUpdater:
     def run(self):
         while True:
             Updater(**self.update_kwargs)
-            if not self.daemonize:
-                break
             sleep(self.delay_between_updates)
 
 
 if __name__ == "__main__":
-    updater = TheUpdater(parse_args())
-    updater.run()
+    if len(sys.argv) == 1:
+        # use the config files
+        pass
+    else:
+        updater = TheUpdater(parse_args())
+        updater.run()

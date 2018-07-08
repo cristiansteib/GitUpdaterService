@@ -3,7 +3,8 @@ from argparse import ArgumentParser
 
 def parse_args():
     parser = ArgumentParser(
-        description='Update projects'
+        description='This script is the runneer for the updater,'
+                    'if no parameter is set, it will going to use the conf/config.ini file'
     )
     parser.add_argument(
         "-i",
@@ -40,4 +41,12 @@ def parse_args():
         help="Daemonize the updater"
     )
 
+    parser.add_argument(
+        "-web",
+        "--web-server",
+        action="store_true",
+        help="Activate the web service"
+    )
+
+    parser.parse_args()
     return parser.parse_args()
