@@ -15,7 +15,7 @@ def parse_args():
 
     parser.add_argument(
         "-c",
-        "--config-directory",
+        "--configs-directory",
         action="store",
         help="Directory where is the configs files located"
     )
@@ -32,5 +32,12 @@ def parse_args():
         "--verbose-full",
         action="store_true",
         help="Show full detail on what is going on"
+    )
+    parser.add_argument(
+        "-web",
+        "--web",
+        action="store_true",
+        default=False,
+        help="Activate the web listener"
     )
     return parser.parse_args()

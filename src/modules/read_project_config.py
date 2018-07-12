@@ -33,13 +33,14 @@ class ConfigReader:
         return self.current_section
 
     def is_webhook(self):
-        return False
+        return bool(self.settings.get(self.current_section, 'is_webhook'))
 
     @staticmethod
     def get_defaults():
         return {
             'pre_update': None,
-            'post_update': None
+            'post_update': None,
+            'is_webhook': False
         }
 
     def get_branch(self):

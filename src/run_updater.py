@@ -1,55 +1,64 @@
 from modules.updater import Updater
-from modules.arguments import parse_args
 from time import sleep
-from modules import web_server
+from modules import arguments
 from modules.config_reader import ConfigReader
 import sys
 import threading
 
-class TheUpdater:
+
+class TheUpdaterDaemon:
     def __init__(self,
-                 parse_args,
+                 config,
+                 demonize=True,
                  delay_between_updates=2):
 
         self.update_kwargs = {
-            'the_file': parse_args.ini,
-            'configs_directory': parse_args.config_directory,
-            'verbose': parse_args.verbose,
-            'full_verbose': parse_args.verbose_full
+            'the_file': config.path_to_one_file(),
+            'configs_directory': config.path_to_projects_configs(),
+            'verbose': config.verbose(),
+            'full_verbose': True
         }
-
-        self.daemonize = parse_args.daemonize
+        self.demonize = demonize
         self.delay_between_updates = delay_between_updates
 
     def run(self):
+        u = Updater(**self.update_kwargs)
         while True:
-            Updater(**self.update_kwargs)
+            u.run()
+            if not self.demonize:
+                break
             sleep(self.delay_between_updates)
 
 
+
 class WebThread (threading.Thread):
-    def __init__(self, *args, **kgargs):
+    def __init__(self):
         threading.Thread.__init__(self)
-        self.args = args
-        self.kwargs = kgargs
 
     def run(self):
-        web_server.run(*self.args, **self.kwargs)
+        from modules import web_server
+        web_server.run()
 
 
 if __name__ == "__main__":
-    config = ConfigReader()
-    web_thread = WebThread(
-        port=config.web_port
-    )
+    args = arguments.parse_args()
+    config = ConfigReader('conf/updater.conf')
+    updater_kwargs = {}
 
-    if config.active_web:
+    if len(sys.argv) > 1:
+        # called script with args, so check the args, and override the configs settings
+        if args.ini:
+            config.set_path_to_one_file(args.ini)
+            updater_kwargs['demonize'] = False
+
+        if args.configs_directory:
+            config.set_path_to_projects_configs(args.configs_directory)
+
+        config.set_active_web(args.web)
+
+    if config.active_web():
+        web_thread = WebThread()
         web_thread.start()
 
-    if len(sys.argv) == 1:
-        # no parameter was send, so use the config files
-        pass
-    else:
-        web_thread.start()
-        updater = TheUpdater(parse_args())
-        updater.run()
+    updater = TheUpdaterDaemon(config, **updater_kwargs)
+    updater.run()

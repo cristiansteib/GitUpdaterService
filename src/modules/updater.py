@@ -19,9 +19,13 @@ class Updater:
 
     def run(self):
         if self.path_to_file_to_read:
+            print('single file')
             self.__run_for_single_config(self.path_to_file_to_read)
         elif self.path_to_multiple_files:
+            print('mult ', self.path_to_multiple_files)
             self.__run_for_multiple_configs(self.path_to_multiple_files)
+        else:
+            print('nada seteado')
 
     def run_if_project_exists(self, project):
         if self.path_to_multiple_files:
@@ -33,12 +37,13 @@ class Updater:
         self.__run_updater(read_project_config.ConfigReader(os.path.abspath(the_file)))
 
     def __run_for_multiple_configs(self, directory, only_this_project=None):
-        configs_files = listdir(directory)
+        """ only_this_project, search of the project"""
         directory = os.path.abspath(directory)
+        configs_files = listdir(directory)
         for the_file in configs_files:
             abs_path = os.path.join(directory, the_file)
             config_of_project = read_project_config.ConfigReader(abs_path)
-            if (only_this_project and only_this_project == config_of_project.get_project_name()) ^ (not config_of_project.is_webhook):
+            if bool(only_this_project and only_this_project == config_of_project.get_project_name()) ^ (not config_of_project.is_webhook()):
                 self.__run_updater(config_of_project)
 
 
@@ -49,19 +54,25 @@ class Updater:
             process = subprocess.Popen(command, shell=True)
             os.waitpid(process.pid, 0)
 
-    def __run_updater(self, config):
-        branch = config.get_branch()
-        git_instance = git.Git(config.get_path())
+    def __run_updater(self, config_of_project):
+        try:
+            branch = config_of_project.get_branch()
+            git_instance = git.Git(config_of_project.get_path())
 
-        if git_instance.current_branch() != branch:
-            git_instance.checkout(branch)
+            if git_instance.current_branch() != branch:
+                git_instance.reset_hard()
+                git_instance.checkout(branch)
 
-        if git_instance.current_branch_need_pull():
-            # do the update in the repo folder
-            self.run_command(config.get_hook_pre())
-            self.cli.info('Updating branch {0} for project: {1}'.format(branch, config.get_project_name()))
-            git_instance.reset_hard()
-            git_instance.pull(branch)
-            self.run_command(config.get_hook_post())
-        else:
-            self.cli.f_info('Branch {0} Up-to-date, for project {1}'.format(branch, config.get_project_name()))
+            if git_instance.current_branch_need_pull():
+                # do the update in the repo folder
+                self.run_command(config_of_project.get_hook_pre())
+                self.cli.info('Updating branch {0} for project: {1}'.format(branch, config_of_project.get_project_name()))
+                git_instance.reset_hard()
+                git_instance.pull(branch)
+                self.run_command(config_of_project.get_hook_post())
+            else:
+                self.cli.f_info('Branch {0} Up-to-date, for project {1}'.format(branch, config_of_project.get_project_name()))
+        except:
+            import sys
+            print('Alto error para: ',config_of_project.get_project_name())
+            print(sys.exc_info())

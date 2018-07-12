@@ -3,9 +3,12 @@ import logging
 from modules.config_reader import ConfigReader
 from modules.updater import Updater
 import json
+
 app = Flask(
     'WebGitUpdaterService',
 )
+config_instance = ConfigReader('conf/updater.conf')
+
 # global instance for Updater class
 updater = None
 
@@ -17,7 +20,7 @@ logging.basicConfig(
 )
 
 
-@app.route('/', methods=['POST', 'GET'])
+@app.route(config_instance.url_path(), methods=['POST', 'GET'])
 def index():
     print('request')
     if not request.json:
@@ -29,10 +32,9 @@ def index():
 
 
 def run():
-    config_instance = ConfigReader('conf/updater.conf')
     global updater
     updater = Updater(
-        configs_directory=config_instance.configs_directory(),
+        configs_directory=config_instance.path_to_projects_configs(),
     )
     app.run(debug=False, host=config_instance.web_host(), port=config_instance.web_port())
 
