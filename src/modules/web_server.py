@@ -21,6 +21,10 @@ logging.basicConfig(
 )
 
 
+def github_get_repo_name(data):
+    return data['repository']['name']
+
+
 @app.route(config_instance.url_path(), methods=['POST', 'GET'])
 def index():
     print('request')
