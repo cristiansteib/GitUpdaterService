@@ -10,13 +10,14 @@ class TheUpdaterDaemon:
     def __init__(self,
                  config,
                  demonize=True,
-                 delay_between_updates=2):
+                 delay_between_updates=2,
+                 full_verbose=False):
 
         self.update_kwargs = {
             'the_file': config.path_to_one_file(),
             'configs_directory': config.path_to_projects_configs(),
             'verbose': config.verbose(),
-            'full_verbose': True
+            'full_verbose': full_verbose
         }
         self.demonize = demonize
         self.delay_between_updates = delay_between_updates
@@ -61,6 +62,7 @@ if __name__ == "__main__":
         if args.configs_directory:
             config.set_path_to_projects_configs(args.configs_directory)
 
+        updater_kwargs['full_verbose'] = args.verbose_full
         config.set_active_web(args.web)
 
     if config.active_web():

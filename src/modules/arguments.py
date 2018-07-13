@@ -24,6 +24,7 @@ def parse_args():
         "-v",
         "--verbose",
         action="store_true",
+        default=False,
         help="Show what is going on"
     )
 
@@ -31,6 +32,7 @@ def parse_args():
         "-vf",
         "--verbose-full",
         action="store_true",
+        default=False,
         help="Show full detail on what is going on"
     )
     parser.add_argument(
@@ -38,6 +40,6 @@ def parse_args():
         "--web",
         action="store_true",
         default=False,
-        help="Activate the web listener"
+        help=""
     )
     return parser.parse_args()

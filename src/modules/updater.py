@@ -16,16 +16,21 @@ class Updater:
         self.cli = cli.Cli(verbose=verbose, full_verbose=full_verbose)
         self.path_to_file_to_read = the_file
         self.path_to_multiple_files = configs_directory
+        self.check_if_is_all_ok()
+
+    def check_if_is_all_ok(self):
+        """ Check if the minimum configs required is ok"""
+        if not self.path_to_multiple_files and not self.path_to_file_to_read:
+            self.cli.error('No file or directory set to read configs!!')
+
 
     def run(self):
         if self.path_to_file_to_read:
-            print('single file')
             self.__run_for_single_config(self.path_to_file_to_read)
         elif self.path_to_multiple_files:
-            print('mult ', self.path_to_multiple_files)
             self.__run_for_multiple_configs(self.path_to_multiple_files)
         else:
-            logging.warning('No path\'s setted, please provide a path for read a single file, or multiple files')
+            logging.error('No path\'s setted, please provide a path for read a single file, or multiple files')
 
     def run_if_project_exists(self, project):
         if self.path_to_multiple_files:
@@ -45,7 +50,6 @@ class Updater:
             config_of_project = read_project_config.ConfigReader(abs_path)
             if bool(only_this_project and only_this_project == config_of_project.get_project_name()) ^ (not config_of_project.is_webhook()):
                 self.__run_updater(config_of_project)
-
 
     def run_command(self,command):
         """ run and wait to finish"""
