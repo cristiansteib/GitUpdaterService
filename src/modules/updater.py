@@ -4,7 +4,6 @@ import subprocess
 import os
 import logging
 
-
 class Updater:
     def __init__(self,
                  the_file=None,
@@ -25,7 +24,7 @@ class Updater:
             print('mult ', self.path_to_multiple_files)
             self.__run_for_multiple_configs(self.path_to_multiple_files)
         else:
-            print('nada seteado')
+            logging.warning('No path\'s setted, please provide a path for read a single file, or multiple files')
 
     def run_if_project_exists(self, project):
         if self.path_to_multiple_files:

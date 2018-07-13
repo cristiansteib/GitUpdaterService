@@ -4,7 +4,7 @@ from modules import arguments
 from modules.config_reader import ConfigReader
 import sys
 import threading
-
+import logging
 
 class TheUpdaterDaemon:
     def __init__(self,
@@ -43,6 +43,13 @@ class WebThread (threading.Thread):
 if __name__ == "__main__":
     args = arguments.parse_args()
     config = ConfigReader('conf/updater.conf')
+    logging.basicConfig(
+        filename=config.log_file(),
+        level=logging.getLevelName(config.log_level().upper()),
+        format='%(asctime)s - %(levelname)s - %(message)s'
+    )
+
+
     updater_kwargs = {}
 
     if len(sys.argv) > 1:

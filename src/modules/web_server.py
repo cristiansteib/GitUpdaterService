@@ -13,9 +13,10 @@ config_instance = ConfigReader('conf/updater.conf')
 updater = None
 
 # log
+
 logging.basicConfig(
-    filename='log.log',
-    level=logging.DEBUG,
+    filename=config_instance.log_file(),
+    level=logging.getLevelName(config_instance.log_level().upper()),
     format='%(asctime)s - %(levelname)s - %(message)s'
 )
 

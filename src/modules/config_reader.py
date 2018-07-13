@@ -14,22 +14,18 @@ class ConfigReader:
         self.settings = configparser.ConfigParser(defaults=self.get_defaults())
         self.settings.read(absolute_path)
         self._path_to_one_projects_configs = self.settings.get('Globals', 'path_to_projects_configs')
-        self._secret_token = None
         self._path_to_one_file = None
-        self._web_port = None
         self._web_host = None
-        self._url_path = None
-        self._active_web = None
         self._demonize = None
         self._demonize_interval = None
-        self._log_level = None
-        self._process_web_service_config()
+        self._log_level = self.settings.get('Globals', 'log_level')
+        self._log_file = self.settings.get('Globals', 'log')
 
-    def _process_web_service_config(self):
         self._web_port = self.settings.get('web', 'port')
         self._active_web = self.settings.get('web', 'active')
         self._url_path = self.settings.get('web', 'path_url')
         self._secret_token = self.settings.get('web', 'secret_token')
+
 
     @staticmethod
     def get_defaults():
@@ -70,3 +66,9 @@ class ConfigReader:
 
     def url_path(self):
         return self._url_path
+
+    def log_file(self):
+        return self._log_file
+
+    def log_level(self):
+        return self._log_level
