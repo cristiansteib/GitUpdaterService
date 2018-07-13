@@ -54,6 +54,3 @@ class ConfigReader:
 
     def get_hook_post(self):
         return self.settings.get(self.current_section, 'post_update')
-
-    def get_project_name(self):
-        return self.current_section

@@ -12,10 +12,11 @@ class Cli:
 
     def log(self, msg):
         if self.__show():
-            print(msg)
+            print("[LOG] : " + msg)
 
     def warning(self, msg):
-        print("[WARNING] : " + msg)
+        if self.__show():
+            print("[WARNING] : " + msg)
 
     def info(self, msg):
         if self.__show():
@@ -23,7 +24,8 @@ class Cli:
 
     def f_info(self, msg):
         if self.full_verbose:
-            self.info(msg)
+            print("[F_INFO] : " + msg)
 
     def error(self, msg):
-        print(msg)
+        if self.__show():
+            print("[ERROR] : " + msg)

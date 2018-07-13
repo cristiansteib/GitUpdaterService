@@ -4,6 +4,7 @@ import subprocess
 import os
 import logging
 
+
 class Updater:
     def __init__(self,
                  the_file=None,
