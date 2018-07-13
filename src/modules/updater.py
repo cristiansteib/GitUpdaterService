@@ -23,7 +23,6 @@ class Updater:
         if not self.path_to_multiple_files and not self.path_to_file_to_read:
             self.cli.error('No file or directory set to read configs!!')
 
-
     def run(self):
         if self.path_to_file_to_read:
             self.__run_for_single_config(self.path_to_file_to_read)
