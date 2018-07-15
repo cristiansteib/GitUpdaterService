@@ -31,7 +31,6 @@ class TheUpdaterDaemon:
             sleep(self.delay_between_updates)
 
 
-
 class WebThread (threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
