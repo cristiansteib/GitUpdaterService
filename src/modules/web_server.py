@@ -25,14 +25,43 @@ def github_get_repo_name(data):
     return data['repository']['name']
 
 
+def gitlab_get_repo_name(data):
+    pass
+
+
+def gogs_get_repo_name(data):
+    pass
+
+
+def isGithub(data):
+    pass
+
+
+def isGitlab(data):
+    pass
+
+
+def isGogs(data):
+    pass
+
+
+def get_repo_name(data):
+    if isGithub(data):
+        return github_get_repo_name(data)
+    elif isGitlab(data):
+        return gitlab_get_repo_name(data)
+    elif isGogs(data):
+        return gogs_get_repo_name(data)
+
+
 @app.route(config_instance.url_path(), methods=['POST', 'GET'])
 def index():
-    print('request')
+    print('Request webHook')
     if not request.json:
         abort(400)
     data = request.json
-    # todo check json git project name
-    updater.run_if_project_exists('unAventon')
+    repo_name = get_repo_name(data)
+    updater.run_if_project_exists(repo_name)
     return json.dumps(data)
 
 
